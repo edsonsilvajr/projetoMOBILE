@@ -42,13 +42,13 @@ class _InputState extends State<Input> {
             borderRadius: BorderRadius.circular(5.0),
             borderSide: BorderSide(
               color: Colors.white,
+              width: 2.3,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
             borderSide: BorderSide(
               color: Colors.white,
-              width: 2.0,
             ),
           ),
         ),
