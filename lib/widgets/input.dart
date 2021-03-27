@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 
-class Input extends StatelessWidget {
+class Input extends StatefulWidget {
   final String textInput;
+  final bool isPassword;
 
-  Input(this.textInput);
+  Input({this.textInput, this.isPassword = false});
 
+  @override
+  _InputState createState() => _InputState();
+}
+
+class _InputState extends State<Input> {
+  bool view = false;
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       child: TextFormField(
+        obscureText: view,
+        keyboardType: TextInputType.visiblePassword,
         cursorColor: Colors.white,
         style: TextStyle(
           color: Colors.white,
         ),
         decoration: InputDecoration(
-          labelText: textInput,
+          suffixIcon: widget.isPassword
+              ? IconButton(
+                  icon: Icon(Icons.remove_red_eye),
+                  onPressed: () {
+                    setState(() {
+                      view = !view;
+                    });
+                  })
+              : null,
+          labelText: widget.textInput,
           fillColor: Colors.white,
           labelStyle: TextStyle(
             color: Colors.white,

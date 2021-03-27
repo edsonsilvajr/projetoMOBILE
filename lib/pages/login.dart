@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './input.dart';
-import './button.dart';
+import '../widgets/input.dart';
+import '../widgets/button.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -20,10 +20,17 @@ class _LoginState extends State<Login> {
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 50),
-                child: Image.asset('assets/Logo.png'),
+                child: Image.asset(
+                  'assets/Logo.png',
+                ),
               ),
-              Input('Email'),
-              Input('Password'),
+              Input(
+                textInput: 'Email',
+              ),
+              Input(
+                textInput: 'Password',
+                isPassword: true,
+              ),
               Button(
                 buttonLabel: 'Login',
                 buttonIcon: Icons.login,
