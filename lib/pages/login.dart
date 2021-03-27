@@ -63,6 +63,7 @@ class _LoginState extends State<Login> {
                   buttonLabel: 'Login',
                   buttonIcon: Icons.login,
                   callback: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
                       if (this._email == 'edsonsilvajr21@gmail.com' &&
