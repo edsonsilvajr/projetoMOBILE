@@ -126,7 +126,7 @@ class _EditarCadastroState extends State<EditarCadastro> {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           backgroundColor: Colors.red,
                           content: Text(
-                              'Suas informações foram alteradas com sucesso'),
+                              'Suas informações foram alteradas com sucesso xd'),
                         ));
                       }
                     }
