@@ -29,6 +29,7 @@ class _InputState extends State<Input> {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       child: TextFormField(
+        maxLines: null,
         onChanged: widget.onSave,
         autovalidateMode: widget.validationCallback != null
             ? AutovalidateMode.onUserInteraction
