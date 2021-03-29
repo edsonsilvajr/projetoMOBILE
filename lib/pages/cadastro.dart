@@ -21,6 +21,11 @@ class _CadastroState extends State<Cadastro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFB82121),
+        title: Text("Cadastro"),
+        elevation: 0,
+      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
@@ -111,6 +116,7 @@ class _CadastroState extends State<Cadastro> {
                             content: Text('Usuário cadastrado com sucesso!'),
                           ),
                         );
+                        Navigator.pop(context);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           backgroundColor: Colors.red,

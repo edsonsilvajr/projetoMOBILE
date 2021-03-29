@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/pages/home.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 
 class Perfil extends StatefulWidget {
@@ -80,7 +81,12 @@ class _PerfilState extends State<Perfil> {
               Button(
                 buttonLabel: 'Logout',
                 buttonIcon: Icons.logout,
-                callback: () {},
+                callback: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                },
               ),
             ],
           ),

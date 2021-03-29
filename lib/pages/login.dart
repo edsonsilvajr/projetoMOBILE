@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:projeto_mobile/pages/bottomBar.dart';
 
 import '../widgets/input.dart';
 import '../widgets/button.dart';
@@ -16,6 +17,11 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFB82121),
+        title: Text("Login"),
+        elevation: 0,
+      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
@@ -71,7 +77,13 @@ class _LoginState extends State<Login> {
                         FocusScope.of(context).unfocus();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Logando'),
+                          duration: Duration(seconds: 1),
                         ));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Receitas()),
+                          (Route<dynamic> route) => false,
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           backgroundColor: Colors.red,
@@ -81,6 +93,9 @@ class _LoginState extends State<Login> {
                     }
                   },
                 ),
+                SizedBox(
+                  height: 100,
+                )
               ],
             ),
           ),

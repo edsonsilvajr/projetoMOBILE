@@ -20,6 +20,11 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFB82121),
+        title: Text("Cadastrar Receita"),
+        elevation: 0,
+      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
