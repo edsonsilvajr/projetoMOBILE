@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/pages/editarCadastro.dart';
 import 'package:projeto_mobile/pages/home.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 
@@ -76,7 +77,12 @@ class _PerfilState extends State<Perfil> {
               Button(
                 buttonLabel: 'Editar informações',
                 buttonIcon: Icons.edit,
-                callback: () {},
+                callback: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditarCadastro()),
+                  );
+                },
               ),
               Button(
                 buttonLabel: 'Logout',

@@ -88,6 +88,7 @@ class _LoginState extends State<Login> {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           backgroundColor: Colors.red,
                           content: Text('Usuário não encontrado'),
+                          duration: Duration(seconds: 1),
                         ));
                       }
                     }
