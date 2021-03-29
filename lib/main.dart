@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-
-import 'pages/login.dart';
+//import 'package:projeto_mobile/pages/editarCadastro.dart';
+//import 'package:projeto_mobile/pages/perfil.dart';
+import 'package:projeto_mobile/pages/receitas.dart';
+//import 'package:projeto_mobile/pages/cadastro.dart';
+//import 'package:projeto_mobile/pages/home.dart';
+//import 'pages/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      home: Receitas(),
     );
   }
 }
