@@ -3,6 +3,8 @@ import 'package:projeto_mobile/pages/editarCadastro.dart';
 import 'package:projeto_mobile/pages/home.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 
+import 'editarCadastro.dart';
+
 class Perfil extends StatefulWidget {
   Perfil({Key key}) : super(key: key);
 
