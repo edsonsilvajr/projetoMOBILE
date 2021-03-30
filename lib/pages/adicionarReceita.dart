@@ -1,7 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/models/recipe.dart';
+import 'package:projeto_mobile/repositories/recipes_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/input.dart';
+import 'package:provider/provider.dart';
 
 class AdicionarReceita extends StatefulWidget {
   AdicionarReceita({Key key}) : super(key: key);
@@ -16,15 +19,11 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
   String _descricao = '';
   String _ingredientes = '';
   String _preparo = '';
+  String _url = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFB82121),
-        title: Text("Cadastrar Receita"),
-        elevation: 0,
-      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
@@ -102,33 +101,48 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                     });
                   },
                 ),
-                Button(
-                  buttonLabel: 'Adicionar receita',
-                  buttonIcon: Icons.add_box_outlined,
-                  callback: () {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    if (_formKey.currentState.validate()) {
-                      _formKey.currentState.save();
-                      if (this._titulo != null &&
-                          this._descricao != null &&
-                          this._ingredientes != null &&
-                          this._preparo != null) {
-                        FocusScope.of(context).unfocus();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Receita cadastrada com sucesso'),
-                          ),
+                Consumer<RecipesRepository>(
+                    builder: (context, repository, child) {
+                  Button(
+                    buttonLabel: 'Adicionar receita',
+                    buttonIcon: Icons.add_box_outlined,
+                    callback: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
+                        Recipe tosave = new Recipe(
+                          id: 123,
+                          author: 'salvinhu',
+                          authorid: 156,
+                          category: '',
+                          description: _descricao,
+                          ingredients: _ingredientes,
+                          preparationMode: _preparo,
+                          title: _titulo,
+                          url: _url,
                         );
+                        repository.add(tosave);
+                        if (this._titulo != null &&
+                            this._descricao != null &&
+                            this._ingredientes != null &&
+                            this._preparo != null) {
+                          FocusScope.of(context).unfocus();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Receita cadastrada com sucesso'),
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('Campos necessários não foram preenchidos'),
+                        ));
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        backgroundColor: Colors.red,
-                        content:
-                            Text('Campos necessários não foram preenchidos'),
-                      ));
-                    }
-                  },
-                ),
+                    },
+                  );
+                })
               ],
             ),
           ),
