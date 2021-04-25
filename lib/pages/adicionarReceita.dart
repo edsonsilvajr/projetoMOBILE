@@ -109,28 +109,29 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        Recipe tosave = new Recipe(
-                          id: 123,
-                          author: 'salvinhu',
-                          authorid: 156,
-                          category: '',
-                          description: _descricao,
-                          ingredients: _ingredientes,
-                          preparationMode: _preparo,
-                          title: _titulo,
-                          url: _url,
-                        );
-                        repository.add(tosave);
                         if (this._titulo != null &&
                             this._descricao != null &&
                             this._ingredientes != null &&
                             this._preparo != null) {
+                          Recipe tosave = new Recipe(
+                            id: 123,
+                            author: 'salvinhu',
+                            authorid: 156,
+                            category: '',
+                            description: _descricao,
+                            ingredients: _ingredientes,
+                            preparationMode: _preparo,
+                            title: _titulo,
+                            url: _url,
+                          );
+                          repository.add(tosave);
                           FocusScope.of(context).unfocus();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Receita cadastrada com sucesso'),
                             ),
                           );
+                          Navigator.pop(context);
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
