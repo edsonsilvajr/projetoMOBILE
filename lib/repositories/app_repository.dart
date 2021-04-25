@@ -1,18 +1,42 @@
 import 'dart:collection';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/models/user.dart';
+import 'package:projeto_mobile/utils/variables.dart';
 
 import '../models/recipe.dart';
 
-class RecipesRepository extends ChangeNotifier {
+class AppRepository extends ChangeNotifier {
   final List<Recipe> _recipes = [];
   final List<Recipe> _favorites = [];
+  var jwt;
 
   UnmodifiableListView<Recipe> get recipes =>
       UnmodifiableListView(this._recipes);
 
   UnmodifiableListView<Recipe> get favorites =>
       UnmodifiableListView(this._favorites);
+
+  Future login(email, password) async {
+    var response;
+    var res = await http.post(
+      Uri.parse("$SERVER_IP/auth"),
+      body: jsonEncode({
+        "email": email,
+        "password": password,
+      }),
+    );
+    response = jsonDecode(res.body);
+    this.jwt = null;
+    if (res.statusCode == 200) {
+      this.jwt = 'Bearer ' + response['data']['token'];
+    }
+
+    return response;
+  }
 
   void add(Recipe recipe) {
     _recipes.add(recipe);
@@ -29,7 +53,7 @@ class RecipesRepository extends ChangeNotifier {
     notifyListeners();
   }
 
-  RecipesRepository() {
+  AppRepository() {
     _recipes.addAll([
       Recipe(
         id: 10,

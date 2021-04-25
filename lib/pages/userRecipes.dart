@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mobile/models/recipe.dart';
 import 'package:projeto_mobile/pages/recipeDetails.dart';
-import 'package:projeto_mobile/repositories/recipes_repository.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:projeto_mobile/pages/adicionarReceita.dart';
 
@@ -30,7 +30,7 @@ class _UserRecipesState extends State<UserRecipes> {
                   );
                 }),
           ]),
-      body: Consumer<RecipesRepository>(
+      body: Consumer<AppRepository>(
         builder: (context, repository, child) {
           return Theme(
             data: ThemeData(

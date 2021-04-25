@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(color: Colors.white, fontSize: 17),
                     ),
                     Text(
-                      "Utilize o Random Kitchen e torne-se um verdade Chef!",
+                      "Utilize o Random Kitchen e torne-se um verdadeiro Chef!",
                       style: TextStyle(color: Colors.white, fontSize: 17),
                       textAlign: TextAlign.center,
                     ),

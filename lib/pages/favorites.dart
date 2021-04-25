@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_mobile/models/recipe.dart';
 import 'package:projeto_mobile/pages/recipeDetails.dart';
-import 'package:projeto_mobile/repositories/recipes_repository.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:provider/provider.dart';
 
 class Favorites extends StatefulWidget {
@@ -19,7 +19,7 @@ class _FavoritesState extends State<Favorites> {
         backgroundColor: Color(0xFFB82121),
         title: Text('Receitas Favoritas'),
       ),
-      body: Consumer<RecipesRepository>(
+      body: Consumer<AppRepository>(
         builder: (context, repository, child) {
           return Theme(
             data: ThemeData(

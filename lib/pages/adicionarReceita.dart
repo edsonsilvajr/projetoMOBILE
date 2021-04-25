@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_mobile/models/recipe.dart';
-import 'package:projeto_mobile/repositories/recipes_repository.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/input.dart';
 import 'package:provider/provider.dart';
@@ -101,9 +101,8 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                     });
                   },
                 ),
-                Consumer<RecipesRepository>(
-                    builder: (context, repository, child) {
-                  Button(
+                Consumer<AppRepository>(builder: (context, repository, child) {
+                  return Button(
                     buttonLabel: 'Adicionar receita',
                     buttonIcon: Icons.add_box_outlined,
                     callback: () {
