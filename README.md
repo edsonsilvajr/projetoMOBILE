@@ -12,4 +12,7 @@ Aplicativo para listagem de receitas culinárias, os chefs podem compartilhar re
 
 ### Ferramentas
 
-Utilizado framework Flutter para desenvolvimento do APP.
+* Utilizado framework Flutter para desenvolvimento do APP.
+* Utilizando API para comunicação de dados
+* API se encontra aqui: https://github.com/edsonsilvajr/projetoWEB
+
