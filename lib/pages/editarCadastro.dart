@@ -21,6 +21,10 @@ class _EditarCadastroState extends State<EditarCadastro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFB82121),
+        title: Text('Editar Cadastro'),
+      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
