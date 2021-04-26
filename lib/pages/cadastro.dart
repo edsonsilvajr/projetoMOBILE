@@ -1,7 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/input.dart';
+import 'package:provider/provider.dart';
 
 class Cadastro extends StatefulWidget {
   Cadastro({Key key}) : super(key: key);
@@ -32,85 +34,88 @@ class _CadastroState extends State<Cadastro> {
           padding: EdgeInsets.all(20),
           child: Form(
             key: _formKey,
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 50),
-                  child: Image.asset(
-                    'assets/Logo.png',
-                  ),
+            child: Column(children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: Image.asset(
+                  'assets/Logo.png',
                 ),
-                Input(
-                  textInput: 'Nome',
-                  onSave: (String value) {
-                    setState(() {
-                      this._nome = value;
-                    });
-                  },
-                  validationCallback: (String value) {
-                    if (value.length < 3) {
-                      return 'Nome é obrigatório e requer ao menos 3 letras';
-                    }
-                    return null;
-                  },
-                ),
-                Input(
-                  textInput: 'Email',
-                  onSave: (String value) {
-                    setState(() {
-                      this._email = value;
-                    });
-                  },
-                  validationCallback: (String value) {
-                    if (!EmailValidator.validate(value)) {
-                      return 'Insira um email válido';
-                    }
-                    return null;
-                  },
-                ),
-                Input(
-                  textInput: 'Password',
-                  onSave: (String value) {
-                    setState(() {
-                      this._password = value;
-                    });
-                  },
-                  isPassword: true,
-                  validationCallback: (String value) {
-                    if (value.length < 6) {
-                      return 'A senha deve ter pelo menos 6 caracteres';
-                    }
-                    return null;
-                  },
-                ),
-                Input(
-                  textInput: 'Confirm Password',
-                  onSave: (String value) {
-                    setState(() {
-                      this._passwordConfirm = value;
-                    });
-                  },
-                  isPassword: true,
-                  validationCallback: (String value) {
-                    if (this._password != this._passwordConfirm) {
-                      flag = 1;
-                    } else {
-                      flag = 0;
-                    }
-                    return null;
-                  },
-                ),
-                Button(
+              ),
+              Input(
+                textInput: 'Nome',
+                onSave: (String value) {
+                  setState(() {
+                    this._nome = value;
+                  });
+                },
+                validationCallback: (String value) {
+                  if (value.length < 3) {
+                    return 'Nome é obrigatório e requer ao menos 3 letras';
+                  }
+                  return null;
+                },
+              ),
+              Input(
+                textInput: 'Email',
+                onSave: (String value) {
+                  setState(() {
+                    this._email = value;
+                  });
+                },
+                validationCallback: (String value) {
+                  if (!EmailValidator.validate(value)) {
+                    return 'Insira um email válido';
+                  }
+                  return null;
+                },
+              ),
+              Input(
+                textInput: 'Password',
+                onSave: (String value) {
+                  setState(() {
+                    this._password = value;
+                  });
+                },
+                isPassword: true,
+                validationCallback: (String value) {
+                  if (value.length < 6) {
+                    return 'A senha deve ter pelo menos 6 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              Input(
+                textInput: 'Confirm Password',
+                onSave: (String value) {
+                  setState(() {
+                    this._passwordConfirm = value;
+                  });
+                },
+                isPassword: true,
+                validationCallback: (String value) {
+                  if (this._password != this._passwordConfirm) {
+                    flag = 1;
+                  } else {
+                    flag = 0;
+                  }
+                  return null;
+                },
+              ),
+              Consumer<AppRepository>(builder: (context, repository, child) {
+                return Button(
                   buttonLabel: 'Cadastrar',
                   buttonIcon: Icons.login,
                   callback: () {
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      print(flag);
-                      print(this._password);
                       if (flag == 0) {
                         FocusScope.of(context).unfocus();
+                        repository.saveUser({
+                          "name": this._nome,
+                          "email": this._email,
+                          "password": this._password,
+                        });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Usuário cadastrado com sucesso!'),
@@ -125,9 +130,9 @@ class _CadastroState extends State<Cadastro> {
                       }
                     }
                   },
-                ),
-              ],
-            ),
+                );
+              })
+            ]),
           ),
         ),
       ),

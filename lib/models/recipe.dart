@@ -20,4 +20,25 @@ class Recipe {
     this.title,
     this.url,
   });
+
+  factory Recipe.fromJson(Map<String, dynamic> json) {
+    return Recipe(
+      id: int.parse(json['id']),
+      author: json['author'],
+      authorid: int.parse(json['authorid']),
+      category: json['category'],
+      description: json['description'],
+      ingredients: json['ingredients'],
+      preparationMode: json['preparationMode'],
+      title: json['title'],
+      url: json['url'],
+    );
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    //return super.toString();
+    return this.id.toString();
+  }
 }

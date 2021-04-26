@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/pages/bottomBar.dart';
 import 'package:projeto_mobile/pages/cadastro.dart';
 import 'package:projeto_mobile/pages/login.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/video_widget.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -40,7 +43,7 @@ class _HomeState extends State<Home> {
                       style: TextStyle(color: Colors.white, fontSize: 17),
                     ),
                     Text(
-                      "Utilize o Random Kitchen e torne-se um verdade Chef!",
+                      "Utilize o Random Kitchen e torne-se um verdadeiro Chef!",
                       style: TextStyle(color: Colors.white, fontSize: 17),
                       textAlign: TextAlign.center,
                     ),

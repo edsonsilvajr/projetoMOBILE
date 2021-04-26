@@ -5,12 +5,15 @@ class Input extends StatefulWidget {
   final bool isPassword;
   final Function validationCallback;
   final Function onSave;
+  final String initialValue;
 
-  Input(
-      {this.textInput,
-      this.isPassword = false,
-      this.validationCallback,
-      this.onSave});
+  Input({
+    this.textInput,
+    this.isPassword = false,
+    this.validationCallback,
+    this.onSave,
+    this.initialValue,
+  });
 
   @override
   _InputState createState() => _InputState();
@@ -29,6 +32,7 @@ class _InputState extends State<Input> {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       child: TextFormField(
+        initialValue: widget.initialValue,
         maxLines: view ? 1 : null,
         onChanged: widget.onSave,
         autovalidateMode: widget.validationCallback != null
