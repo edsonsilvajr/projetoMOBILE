@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -11,14 +13,19 @@ import '../models/recipe.dart';
 
 class AppRepository extends ChangeNotifier {
   final List<Recipe> _recipes = [];
+  final List<Recipe> _myRecipes = [];
   final List<Recipe> _favorites = [];
-  var jwt;
+  var storage = FlutterSecureStorage();
+  User user;
 
   UnmodifiableListView<Recipe> get recipes =>
       UnmodifiableListView(this._recipes);
 
   UnmodifiableListView<Recipe> get favorites =>
       UnmodifiableListView(this._favorites);
+
+  UnmodifiableListView<Recipe> get myRecipes =>
+      UnmodifiableListView(this._myRecipes);
 
   Future login(email, password) async {
     var response;
@@ -30,9 +37,9 @@ class AppRepository extends ChangeNotifier {
       }),
     );
     response = jsonDecode(res.body);
-    this.jwt = null;
     if (res.statusCode == 200) {
-      this.jwt = 'Bearer ' + response['data']['token'];
+      storage.write(key: "jwt", value: 'Bearer ' + response['data']['token']);
+      this.user = User.fromJson(response['data']['user']);
     }
 
     return response;
@@ -49,48 +56,160 @@ class AppRepository extends ChangeNotifier {
   }
 
   void removeFav(Recipe recipe) {
-    _favorites.remove(recipe);
+    var index = -1;
+    _favorites.asMap().forEach((i, element) {
+      if (element.id == recipe.id) {
+        index = i;
+      }
+    });
+    if (index >= 0) _favorites.removeAt(index);
     notifyListeners();
   }
 
+  getAllRecipes() async {
+    var jwt = await storage.read(key: 'jwt');
+    if (jwt != null) {
+      var res = await http.get(
+        Uri.parse("$SERVER_IP/recipe?getParam=2"),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      var res2 = jsonDecode(res.body);
+      _recipes.clear();
+      res2.forEach((e) => _recipes.add(Recipe.fromJson(e)));
+
+      notifyListeners();
+    }
+  }
+
+  getUserRecipes() async {
+    var jwt = await storage.read(key: 'jwt');
+    if (jwt != null) {
+      var res = await http.get(
+        Uri.parse(
+            "$SERVER_IP/recipe?getParam=2&id=" + this.user.uid.toString()),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      var res2 = jsonDecode(res.body);
+      _myRecipes.clear();
+      res2.forEach((e) => _myRecipes.add(Recipe.fromJson(e)));
+
+      notifyListeners();
+    }
+  }
+
+  createRecipe(Map json) async {
+    var jwt = await storage.read(key: 'jwt');
+    if (jwt != null) {
+      var response;
+      var function = json['id'] != null ? http.put : http.post;
+      var res = await function(
+        Uri.parse("$SERVER_IP/recipe"),
+        body: jsonEncode({
+          "author": this.user.name,
+          "authorid": this.user.uid,
+          "description": json['description'],
+          "id": json['id'],
+          "ingredients": json['ingredients'],
+          "preparationMode": json['preparationMode'],
+          "title": json['title'],
+          "url": json['url'],
+        }),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      response = jsonDecode(res.body);
+      return response;
+    }
+  }
+
+  logOut() async {
+    _recipes.clear();
+    _favorites.clear();
+    _myRecipes.clear();
+    user = null;
+    await storage.delete(key: "jwt");
+  }
+
+  saveUser(Map json) async {
+    var res = await http.post(
+      Uri.parse("$SERVER_IP/user"),
+      body: jsonEncode({
+        "email": json['email'],
+        "document": "12039102",
+        "date": "00/00/0000",
+        "gender": "M",
+        "name": json['name'],
+        "password": json['password'],
+        "type": "cozinheiro",
+        "uid": null,
+      }),
+    );
+    return res;
+  }
+
+  favoriteRecipe(bool action, Recipe recipe) async {
+    var jwt = await storage.read(key: "jwt");
+    if (jwt != null) {
+      var res = await http.put(
+        Uri.parse("$SERVER_IP/favorite?uid=" +
+            this.user.uid.toString() +
+            "&rid=" +
+            recipe.id.toString()),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      return action ? removeFav(recipe) : addFav(recipe);
+    }
+  }
+
+  deleteRecipe(Recipe json) async {
+    var jwt = await storage.read(key: "jwt");
+    if (jwt != null) {
+      var res = await http.delete(
+        Uri.parse(
+          "$SERVER_IP/recipe?id=" + json.id.toString(),
+        ),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      return res;
+    }
+  }
+
+  getFavorites() async {
+    var jwt = await storage.read(key: "jwt");
+    if (jwt != null) {
+      var res = await http.get(
+        Uri.parse("$SERVER_IP/favorite?uid=" + this.user.uid.toString()),
+        headers: {
+          HttpHeaders.authorizationHeader: jwt,
+        },
+      );
+      var res2 = jsonDecode(res.body);
+      _favorites.clear();
+      res2.forEach((e) => _favorites.add(Recipe.fromJson(e)));
+    }
+  }
+
+  getAll() async {
+    getFavorites();
+    getAllRecipes();
+    getUserRecipes();
+    notifyListeners();
+  }
+
+  getJWT() async {
+    return await storage.read(key: 'jwt');
+  }
+
   AppRepository() {
-    _recipes.addAll([
-      Recipe(
-        id: 10,
-        author: "Chef Zezinho",
-        authorid: 15902,
-        title: "FRITURA",
-        url: "",
-        description: "Um delecioso prato de frango com batata frita e salada",
-        ingredients:
-            "2x peda\u00e7os de frango, 1 pacote de batata frita, salada a gosto",
-        preparationMode: "frita tudo e come",
-        category: "Lanches",
-      ),
-      Recipe(
-        id: 11,
-        author: "Chef Joker",
-        authorid: 985624,
-        title: "RAMEN is Delicious",
-        url:
-            "https:\/\/i1.wp.com\/www.verdadefeminina.com.br\/wp-content\/uploads\/2019\/04\/ramen-comida-japonesa-e1555817633288.jpg",
-        description: "RAMEN JAPONES",
-        ingredients: "Ramen com vegetais",
-        preparationMode: "Joga tudo no caldo Carnes, basta comer",
-        category: "Massas",
-      ),
-      Recipe(
-        id: 12,
-        author: "Chef Joker",
-        authorid: 985624,
-        title: "HASH POTATOES + FRANGO",
-        url:
-            "https:\/\/i1.wp.com\/verdadefeminina.com.br\/wp-content\/uploads\/2019\/04\/comida-japonesa-o-que-comer-japao.jpg",
-        description: "Batatas e frango",
-        ingredients: "batata e frango",
-        preparationMode: "frita batata, assa o frango, come",
-        category: "Carnes",
-      ),
-    ]);
+    getAllRecipes();
   }
 }

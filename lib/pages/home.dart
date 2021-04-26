@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_mobile/pages/bottomBar.dart';
 import 'package:projeto_mobile/pages/cadastro.dart';
 import 'package:projeto_mobile/pages/login.dart';
+import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/video_widget.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   @override

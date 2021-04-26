@@ -7,7 +7,8 @@ import 'package:projeto_mobile/widgets/input.dart';
 import 'package:provider/provider.dart';
 
 class AdicionarReceita extends StatefulWidget {
-  AdicionarReceita({Key key}) : super(key: key);
+  final Recipe recipe;
+  AdicionarReceita({Key key, this.recipe}) : super(key: key);
 
   @override
   _AdicionarReceitaState createState() => _AdicionarReceitaState();
@@ -20,10 +21,26 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
   String _ingredientes = '';
   String _preparo = '';
   String _url = '';
+  bool onlyOnce = false;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.recipe != null && !this.onlyOnce) {
+      setState(() {
+        this._titulo = widget.recipe.title;
+        this._descricao = widget.recipe.description;
+        this._ingredientes = widget.recipe.ingredients;
+        this._preparo = widget.recipe.preparationMode;
+        this._url = widget.recipe.url;
+        this.onlyOnce = true;
+      });
+    }
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFFB82121),
+        title: Text("Cadastro de Receita"),
+        elevation: 0,
+      ),
       backgroundColor: Color(0xFFB82121),
       body: Center(
         child: SingleChildScrollView(
@@ -39,10 +56,13 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                   ),
                 ),
                 Input(
+                  initialValue:
+                      widget.recipe != null ? widget.recipe.title : null,
                   textInput: 'Título da receita',
                   onSave: (String value) {
                     setState(() {
                       this._titulo = value;
+                      print(this._titulo);
                     });
                   },
                   validationCallback: (String value) {
@@ -53,6 +73,8 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                   },
                 ),
                 Input(
+                  initialValue:
+                      widget.recipe != null ? widget.recipe.description : null,
                   textInput: 'Descrição',
                   onSave: (String value) {
                     setState(() {
@@ -67,6 +89,8 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                   },
                 ),
                 Input(
+                  initialValue:
+                      widget.recipe != null ? widget.recipe.ingredients : null,
                   textInput: 'Ingredientes',
                   onSave: (String value) {
                     setState(() {
@@ -81,6 +105,9 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                   },
                 ),
                 Input(
+                  initialValue: widget.recipe != null
+                      ? widget.recipe.preparationMode
+                      : null,
                   textInput: 'Modo de Preparo',
                   onSave: (String value) {
                     setState(() {
@@ -94,10 +121,12 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                   },
                 ),
                 Input(
+                  initialValue:
+                      widget.recipe != null ? widget.recipe.url : null,
                   textInput: 'URL da imagem',
                   onSave: (String value) {
                     setState(() {
-                      this._preparo = value;
+                      this._url = value;
                     });
                   },
                 ),
@@ -113,18 +142,17 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                             this._descricao != null &&
                             this._ingredientes != null &&
                             this._preparo != null) {
-                          Recipe tosave = new Recipe(
-                            id: 123,
-                            author: 'salvinhu',
-                            authorid: 156,
-                            category: '',
-                            description: _descricao,
-                            ingredients: _ingredientes,
-                            preparationMode: _preparo,
-                            title: _titulo,
-                            url: _url,
-                          );
-                          repository.add(tosave);
+                          print(this._titulo);
+                          repository.createRecipe({
+                            "title": this._titulo,
+                            "url": this._url,
+                            "description": this._descricao,
+                            "ingredients": this._ingredientes,
+                            "preparationMode": this._preparo,
+                            "id":
+                                widget.recipe != null ? widget.recipe.id : null,
+                          }).then((res) => repository.getAll());
+
                           FocusScope.of(context).unfocus();
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

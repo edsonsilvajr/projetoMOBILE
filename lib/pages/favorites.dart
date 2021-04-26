@@ -73,9 +73,7 @@ class _FavoritesState extends State<Favorites> {
                             ),
                             onPressed: () {
                               setState(() {
-                                isFavorite
-                                    ? repository.removeFav(recipe)
-                                    : repository.addFav(recipe);
+                                repository.favoriteRecipe(true, recipe);
                               });
                             },
                           ),

@@ -82,12 +82,12 @@ class _LoginState extends State<Login> {
                                 content: Text(response['errors']),
                               ));
                             } else {
+                              repository.getAll();
                               Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Receitas()),
-                                (Route<dynamic> route) => false,
-                              );
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Receitas()),
+                                  (Route<dynamic> route) => false);
                             }
                           },
                         );

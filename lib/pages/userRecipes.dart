@@ -52,19 +52,19 @@ class _UserRecipesState extends State<UserRecipes> {
                     color: Color(0xDEB82121),
                     child: ListView.separated(
                       padding: EdgeInsets.only(top: 10),
-                      itemCount: repository.recipes.length,
+                      itemCount: repository.myRecipes.length,
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
                       itemBuilder: (context, index) {
-                        final List<Recipe> recipes = repository.recipes;
+                        final List<Recipe> myRecipes = repository.myRecipes;
                         return ListTile(
                           title: Text(
-                            recipes[index].title,
+                            myRecipes[index].title,
                             style: TextStyle(color: Colors.white),
                           ),
-                          leading: (recipes[index].url != "")
+                          leading: (myRecipes[index].url != "")
                               ? Image.network(
-                                  recipes[index].url,
+                                  myRecipes[index].url,
                                   cacheWidth: 100,
                                   cacheHeight: 100,
                                 )
@@ -75,6 +75,29 @@ class _UserRecipesState extends State<UserRecipes> {
                                     color: Colors.white,
                                   ),
                                 ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                repository
+                                    .deleteRecipe(myRecipes[index])
+                                    .then((res) {
+                                  repository.getAll();
+                                });
+                              });
+                            },
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AdicionarReceita(
+                                      recipe: myRecipes[index])),
+                            );
+                          },
                         );
                       },
                     ),
