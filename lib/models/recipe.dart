@@ -23,9 +23,9 @@ class Recipe {
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
     return Recipe(
-      id: int.parse(json['id']),
+      id: json['id'],
       author: json['author'],
-      authorid: int.parse(json['authorid']),
+      authorid: json['authorid'],
       category: json['category'],
       description: json['description'],
       ingredients: json['ingredients'],

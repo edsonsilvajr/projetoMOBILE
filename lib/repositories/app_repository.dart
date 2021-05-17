@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -73,6 +74,7 @@ class AppRepository extends ChangeNotifier {
         Uri.parse("$SERVER_IP/recipe?getParam=2"),
         headers: {
           HttpHeaders.authorizationHeader: jwt,
+          HttpHeaders.connectionHeader: 'keep-alive',
         },
       );
       var res2 = jsonDecode(res.body);
@@ -103,6 +105,16 @@ class AppRepository extends ChangeNotifier {
 
   createRecipe(Map json) async {
     var jwt = await storage.read(key: 'jwt');
+    print({
+      "author": this.user.name,
+      "authorid": this.user.uid,
+      "description": json['description'],
+      "id": json['id'],
+      "ingredients": json['ingredients'],
+      "preparationMode": json['preparationMode'],
+      "title": json['title'],
+      "url": json['url'],
+    });
     if (jwt != null) {
       var response;
       var function = json['id'] != null ? http.put : http.post;
@@ -125,6 +137,20 @@ class AppRepository extends ChangeNotifier {
       response = jsonDecode(res.body);
       return response;
     }
+  }
+
+  createRecipeImage(id, file) async {
+    var dio = Dio();
+    var jwt = await storage.read(key: 'jwt');
+    dio.options.headers['authorization'] = jwt;
+    var formData = FormData.fromMap(
+        {'file': await MultipartFile.fromFile(file.path, filename: file.path)});
+    var response =
+        await dio.post('http://10.0.2.2:8000/api/recipe/$id', data: formData);
+    if (response != null) {
+      return response.data;
+    }
+    return false;
   }
 
   logOut() async {

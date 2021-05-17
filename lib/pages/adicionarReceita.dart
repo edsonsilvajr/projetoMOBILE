@@ -1,10 +1,17 @@
+import 'dart:io';
+
+import 'package:camera_camera/camera_camera.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:projeto_mobile/models/recipe.dart';
+import 'package:projeto_mobile/pages/previewPage.dart';
 import 'package:projeto_mobile/repositories/app_repository.dart';
 import 'package:projeto_mobile/widgets/button.dart';
 import 'package:projeto_mobile/widgets/input.dart';
 import 'package:provider/provider.dart';
+
+import 'anexo.dart';
 
 class AdicionarReceita extends StatefulWidget {
   final Recipe recipe;
@@ -22,6 +29,29 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
   String _preparo = '';
   String _url = '';
   bool onlyOnce = false;
+
+  File arquivo;
+  final picker = ImagePicker();
+
+  Future getFileFromGallery() async {
+    final file = await picker.getImage(source: ImageSource.gallery);
+
+    if (file != null) {
+      setState(() => arquivo = File(file.path));
+    }
+  }
+
+  showPreview(file) async {
+    file = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PreviewPage(file: file)),
+    );
+
+    if (file != null) {
+      setState(() => arquivo = file);
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +160,78 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                     });
                   },
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'ou',
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CameraCamera(onFile: (file) => showPreview(file)),
+                        ));
+                  },
+                  icon: Icon(Icons.camera_alt),
+                  label: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('Tire uma foto'),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      onPrimary: Colors.red,
+                      elevation: 0.0,
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                      )),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'ou',
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                OutlinedButton.icon(
+                  icon: Icon(Icons.attach_file),
+                  label: Text('Selecione um arquivo'),
+                  onPressed: () => getFileFromGallery(),
+                  style: OutlinedButton.styleFrom(
+                    primary: Colors.white,
+                    side: BorderSide(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Preview',
+                  style: TextStyle(color: Colors.white, fontSize: 40),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12.0)),
+                  child: arquivo != null
+                      ? Anexo(arquivo: arquivo)
+                      : SizedBox(
+                          height: 200,
+                          width: 200,
+                        ),
+                ),
                 Consumer<AppRepository>(builder: (context, repository, child) {
                   return Button(
                     buttonLabel: 'Adicionar receita',
@@ -151,7 +253,17 @@ class _AdicionarReceitaState extends State<AdicionarReceita> {
                             "preparationMode": this._preparo,
                             "id":
                                 widget.recipe != null ? widget.recipe.id : null,
-                          }).then((res) => repository.getAll());
+                          }).then((res) {
+                            if (arquivo != null) {
+                              repository
+                                  .createRecipeImage(res['id'], arquivo)
+                                  .then((res) {
+                                repository.getAll();
+                              });
+                            } else {
+                              repository.getAll();
+                            }
+                          });
 
                           FocusScope.of(context).unfocus();
                           ScaffoldMessenger.of(context).showSnackBar(

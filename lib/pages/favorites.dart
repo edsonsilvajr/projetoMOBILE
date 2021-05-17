@@ -56,6 +56,7 @@ class _FavoritesState extends State<Favorites> {
                           leading: (favorites[index].url != "")
                               ? Image.network(
                                   favorites[index].url,
+                                  headers: {"Connection": 'keep-alive'},
                                   cacheWidth: 100,
                                   cacheHeight: 100,
                                 )

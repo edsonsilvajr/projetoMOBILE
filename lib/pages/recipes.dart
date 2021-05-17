@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:projeto_mobile/models/recipe.dart';
 import 'package:projeto_mobile/pages/recipeDetails.dart';
@@ -50,6 +52,7 @@ class _RecipesState extends State<Recipes> {
                         leading: (recipes[index].url != "")
                             ? Image.network(
                                 recipes[index].url,
+                                headers: {"Connection": 'keep-alive'},
                                 cacheWidth: 100,
                                 cacheHeight: 100,
                               )

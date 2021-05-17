@@ -9,7 +9,7 @@ class User {
   String gender;
   String date;
   String email;
-  List<String> favorites;
+  List<int> favorites;
   String document;
 
   User({
@@ -25,7 +25,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      uid: int.parse(json['uid']),
+      uid: json['uid'],
       name: json['name'],
       document: json['document'],
       date: json['date'],

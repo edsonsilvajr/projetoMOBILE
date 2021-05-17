@@ -65,6 +65,7 @@ class _UserRecipesState extends State<UserRecipes> {
                           leading: (myRecipes[index].url != "")
                               ? Image.network(
                                   myRecipes[index].url,
+                                  headers: {"Connection": 'keep-alive'},
                                   cacheWidth: 100,
                                   cacheHeight: 100,
                                 )
